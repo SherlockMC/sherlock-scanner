@@ -7,3 +7,5 @@ edition = "2021"
 
 [dependencies]
 pocketbase-sdk = "0.0.8"
+rand = "0.8.5"
+rust_masscan = "0.1.7"
