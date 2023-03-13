@@ -1,8 +1,6 @@
 use rand::Rng;
 use std::process::Command;
 use std::net::Ipv4Addr;
-use std::fs::File;
-use std::io::Write;
 
 fn main() {
 
@@ -50,32 +48,24 @@ fn main() {
 
         let ranges = chunk.iter().map(|ip| ip.to_string()).collect::<Vec<String>>().join(",");
 
+        let filename = format!("scan_chunk_{}.txt", i);
+
         let output = Command::new("masscan")
         .args(&[
 
             "-p", "25565",
             "--rate", "10000",
             &ranges,
+            "-oL", &filename
 
         ])
 
         .output()
         .expect("Failed to execute masscan");
 
-        let filename = format!("scan_chunk_{}.txt", i);
-
-        let mut file = File::create(filename)
-            .expect("Failed to create file");
-
         if output.status.success() {
 
             println!("Completed Scan Chunk {}", i);
-
-            let stdout = String::from_utf8(output.stderr).unwrap();
-
-            file.write_all(stdout.as_bytes())
-
-                .expect("Failed to write output to file");
 
         } else {
 
